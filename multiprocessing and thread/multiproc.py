@@ -17,10 +17,36 @@ import time
 #        
 #        
 
-def consumer(input_q):
+#def consumer(input_q, message):
+#    while True:
+#        item = input_q.get()
+#        print(message + ": ", item)
+#        input_q.task_done()
+#        
+#def producer(sequence, output_q):
+#    for item in sequence:
+#        output_q.put(item)
+#        
+#        
+#if __name__ == '__main__':
+#    q = multiprocessing.JoinableQueue()
+#    cons_p1 = multiprocessing.Process(target=consumer, args=(q,"Process 1"))
+#    cons_p1.daemon = True
+#    cons_p1.start()
+#    
+#    q = multiprocessing.JoinableQueue()
+#    cons_p2 = multiprocessing.Process(target=consumer, args=(q,"Process 2"))
+#    cons_p2.daemon = True
+#    cons_p2.start()
+#    
+#    sequence = [1,2,3,4]
+#    producer(sequence, q)
+#    q.join()
+
+def consumer(input_q, message):
     while True:
         item = input_q.get()
-        print(item)
+        print(message + ": ", item, time.time())
         input_q.task_done()
         
 def producer(sequence, output_q):
@@ -30,11 +56,15 @@ def producer(sequence, output_q):
         
 if __name__ == '__main__':
     q = multiprocessing.JoinableQueue()
-    cons_p = multiprocessing.Process(target=consumer, args=(q,))
-    cons_p.daemon = True
-    cons_p.start()
+    cons_p1 = multiprocessing.Process(target=consumer, args=(q,"Process 1"))
+    cons_p1.daemon = True
+    cons_p1.start()
     
-    sequence = [1,2,3,4]
+    cons_p2 = multiprocessing.Process(target=consumer, args=(q,"Process 2"))
+    cons_p2.daemon = True
+    cons_p2.start()
+    
+    sequence = [1,2,3,4,5,6,7,8,9]
     producer(sequence, q)
     q.join()
     
